@@ -1,0 +1,2635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Nicole Only</title>
+  <style>
+    :root {
+      --cerulean: #8EB1D1;
+      --baby: #A7C7E7;
+      --midnight: #1C2B48;
+      --platinum: #E8ECEF;
+      --bluegrey: #C4D8E5;
+      --paper: #F3EEE2;
+      --ink-soft: rgba(28, 43, 72, .68);
+      --line: rgba(28, 43, 72, .16);
+      --shadow: rgba(28, 43, 72, .22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--platinum);
+      color: var(--midnight);
+      font-family: Georgia, "Times New Roman", "Noto Serif SC", serif;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .grain {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      opacity: .055;
+      mix-blend-mode: multiply;
+      background-image: radial-gradient(circle, rgba(28,43,72,.2) 0 1px, transparent 1px);
+      background-size: 4px 4px;
+    }
+
+    /* ========== Password ========== */
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      grid-template-columns: 47% 53%;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(232,236,239,.96), transparent 28%),
+        radial-gradient(circle at 82% 42%, rgba(142,177,209,.52), transparent 34%),
+        linear-gradient(135deg, #E8ECEF 0%, #C4D8E5 44%, #A7C7E7 78%, #8EB1D1 100%);
+      transition: opacity .65s ease, visibility .65s ease;
+    }
+
+    .gate.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .gate-panel {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-left: 7vw;
+      padding-right: 0;
+    }
+
+    .gate-card {
+      position: relative;
+      z-index: 3;
+      width: min(620px, 92%);
+      padding: 52px 54px 58px;
+      border: 1px solid rgba(28,43,72,.14);
+      background: rgba(232,236,239,.78);
+      box-shadow: 0 30px 88px rgba(28,43,72,.18);
+      backdrop-filter: blur(12px);
+      transform: translateX(48px);
+    }
+
+    .gate-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 30px;
+      color: rgba(28,43,72,.58);
+      font-size: 12px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    .gate-title {
+      color: var(--midnight);
+      font-size: clamp(62px, 6vw, 94px);
+      font-style: italic;
+      font-weight: 400;
+      line-height: .88;
+    }
+
+    .gate-subtitle {
+      width: 470px;
+      max-width: 100%;
+      margin: 28px 0 36px;
+      color: rgba(28,43,72,.62);
+      font-size: 15px;
+      line-height: 1.75;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .gate-form {
+      display: flex;
+      gap: 14px;
+    }
+
+    .gate-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 17px 20px;
+      border: 1px solid rgba(28,43,72,.18);
+      outline: none;
+      background: rgba(255,255,255,.54);
+      color: var(--midnight);
+      font-size: 16px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    .gate-form button {
+      width: 138px;
+      background: var(--midnight);
+      color: var(--platinum);
+      font-size: 13px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      transition: .22s ease;
+    }
+
+    .gate-form button:hover {
+      background: #263a60;
+      transform: translateY(-2px);
+    }
+
+    .gate-hint {
+      height: 20px;
+      margin-top: 16px;
+      color: rgba(28,43,72,.58);
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+
+    .gate-photo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4vw 4.5vw 4vw 2vw;
+    }
+
+    .gate-photo {
+      width: min(730px, 92%);
+      height: min(790px, 86vh);
+      padding: 24px;
+      border: 1px solid rgba(232,236,239,.72);
+      background: rgba(232,236,239,.28);
+      box-shadow: 0 30px 90px rgba(28,43,72,.2);
+      transform: rotate(1.1deg);
+    }
+
+    .gate-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% center;
+      filter: grayscale(.08) saturate(.82) contrast(1.03);
+    }
+
+    .gate-date {
+      position: absolute;
+      right: 5vw;
+      bottom: 4vw;
+      color: rgba(28,43,72,.28);
+      font-size: 13px;
+      letter-spacing: .34em;
+    }
+
+    /* ========== Site ========== */
+    .site {
+      position: fixed;
+      inset: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .65s ease .18s, visibility .65s ease .18s;
+    }
+
+    .site.is-show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(232,236,239,.92), transparent 28%),
+        radial-gradient(circle at 84% 30%, rgba(142,177,209,.56), transparent 31%),
+        linear-gradient(135deg, #E8ECEF 0%, #C4D8E5 42%, #A7C7E7 74%, #8EB1D1 100%);
+      transition: opacity .45s ease, visibility .45s ease, transform .45s ease;
+    }
+
+    .page.is-active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .topbar {
+      position: fixed;
+      top: 24px;
+      left: 34px;
+      right: 34px;
+      z-index: 80;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      color: rgba(232,236,239,.68);
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .topbar strong {
+      color: var(--platinum);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: .1em;
+      text-transform: none;
+    }
+
+    .back-btn {
+      position: fixed;
+      left: 34px;
+      bottom: 28px;
+      z-index: 90;
+      display: none;
+      padding: 12px 18px;
+      border: 1px solid rgba(28,43,72,.16);
+      background: rgba(232,236,239,.78);
+      color: var(--midnight);
+      box-shadow: 0 18px 40px rgba(28,43,72,.14);
+      backdrop-filter: blur(10px);
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: .22s ease;
+    }
+
+    .back-btn.is-show {
+      display: block;
+    }
+
+    .back-btn:hover {
+      background: var(--platinum);
+      transform: translateY(-2px);
+    }
+
+    /* ========== Home: horizontal private collection table ========== */
+    .home-scroll {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 56px;
+      bottom: 56px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      cursor: grab;
+    }
+
+    .home-scroll:active {
+      cursor: grabbing;
+    }
+
+    .home-scroll::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .home-scroll::-webkit-scrollbar-track {
+      background: rgba(232,236,239,.38);
+    }
+
+    .home-scroll::-webkit-scrollbar-thumb {
+      background: rgba(28,43,72,.32);
+      border-radius: 999px;
+    }
+
+    .home-world {
+      position: relative;
+      width: 2520px;
+      height: 100%;
+      margin: 0 70px;
+      border: 1px solid rgba(232,236,239,.12);
+      background:
+        radial-gradient(circle at 23% 24%, rgba(142,177,209,.2), transparent 25%),
+        radial-gradient(circle at 47% 58%, rgba(196,216,229,.12), transparent 28%),
+        radial-gradient(circle at 78% 28%, rgba(167,199,231,.16), transparent 28%),
+        linear-gradient(90deg, rgba(28,43,72,.98) 0%, rgba(17,26,43,.99) 34%, rgba(28,43,72,.96) 62%, rgba(10,14,23,.99) 100%);
+      box-shadow:
+        inset 0 0 140px rgba(232,236,239,.06),
+        inset 0 0 110px rgba(28,43,72,.36),
+        0 34px 90px rgba(28,43,72,.22);
+      overflow: hidden;
+    }
+
+    .home-world::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(232,236,239,.035) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(232,236,239,.025) 1px, transparent 1px);
+      background-size: 38px 38px;
+      opacity: .42;
+      pointer-events: none;
+    }
+
+    .home-world::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 82%, rgba(232,236,239,.06), transparent 24%),
+        radial-gradient(circle at 62% 78%, rgba(142,177,209,.08), transparent 26%),
+        linear-gradient(to bottom, rgba(232,236,239,.03) 0%, rgba(28,43,72,.24) 100%);
+      pointer-events: none;
+    }
+
+    .home-title {
+      position: absolute;
+      left: 88px;
+      top: 72px;
+      z-index: 20;
+      width: 350px;
+    }
+
+    .home-title .tiny {
+      margin-bottom: 14px;
+      color: rgba(196,216,229,.74);
+      font-size: 12px;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+    }
+
+    .home-title h1 {
+      color: var(--bluegrey);
+      font-size: 60px;
+      font-style: italic;
+      font-weight: 400;
+      line-height: .88;
+    }
+
+    .home-title p {
+      width: 300px;
+      margin-top: 20px;
+      color: rgba(196,216,229,.76);
+      font-size: 12px;
+      line-height: 1.8;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .home-zone-title {
+      position: absolute;
+      z-index: 6;
+      color: rgba(232,236,239,.28);
+      font-size: 12px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    .zone-01 {
+      left: 530px;
+      top: 70px;
+    }
+
+    .zone-02 {
+      left: 1110px;
+      top: 70px;
+    }
+
+    .zone-03 {
+      left: 1770px;
+      top: 70px;
+    }
+
+    .home-item {
+      position: absolute;
+      z-index: 10;
+      cursor: pointer;
+      transition: transform .25s ease, filter .25s ease;
+      filter: drop-shadow(0 26px 30px rgba(0,0,0,.36));
+    }
+
+    .home-item:hover {
+      filter:
+        drop-shadow(0 0 18px rgba(167,199,231,.58))
+        drop-shadow(0 30px 34px rgba(0,0,0,.44));
+      transform: translateY(-8px) scale(1.025) rotate(var(--r));
+    }
+
+    .typewriter {
+      left: 205px;
+      bottom: 42px;
+      width: 410px;
+      --r: -2deg;
+      transform: rotate(-2deg);
+      z-index: 18;
+    }
+
+    .whiskey-card {
+      left: 635px;
+      bottom: 70px;
+      width: 305px;
+      padding: 12px 12px 34px;
+      background: rgba(232,236,239,.9);
+      box-shadow: 0 28px 56px rgba(0,0,0,.36);
+      --r: 4deg;
+      transform: rotate(4deg);
+      z-index: 24;
+    }
+
+    .whiskey-card img {
+      width: 100%;
+      height: 205px;
+      object-fit: cover;
+      filter: saturate(.82) contrast(1.02);
+    }
+
+    .whiskey-card span,
+    .photo-card span,
+    .main-photo span {
+      position: absolute;
+      left: 16px;
+      bottom: 10px;
+      color: rgba(28,43,72,.78);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+    }
+
+    .filmstrip {
+      left: 520px;
+      top: 68px;
+      width: 320px;
+      opacity: .18;
+      transform: rotate(16deg);
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      z-index: 3;
+    }
+
+    .main-photo {
+      left: 805px;
+      top: 62px;
+      width: 455px;
+      height: 610px;
+      padding: 18px 18px 58px;
+      border: 1px solid rgba(232,236,239,.28);
+      background: rgba(232,236,239,.16);
+      box-shadow: 0 34px 76px rgba(0,0,0,.34);
+      --r: -1deg;
+      transform: rotate(-1deg);
+      z-index: 13;
+    }
+
+    .main-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(.76) contrast(1.03);
+    }
+
+    .books {
+      left: 1278px;
+      bottom: 38px;
+      width: 420px;
+      --r: 0deg;
+      transform: rotate(0deg);
+      z-index: 20;
+    }
+
+    .phone {
+      left: 1286px;
+      top: 150px;
+      bottom: auto;
+      width: 118px;
+      --r: -12deg;
+      transform: rotate(-12deg);
+      z-index: 31;
+    }
+
+    .photo-card {
+      padding: 11px 11px 36px;
+      background: rgba(232,236,239,.92);
+      box-shadow: 0 28px 54px rgba(0,0,0,.34);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(.12) saturate(.78) contrast(1.04);
+    }
+
+    .photo-one {
+      left: 1478px;
+      top: 86px;
+      width: 260px;
+      height: 350px;
+      --r: -6deg;
+      transform: rotate(-6deg);
+      z-index: 17;
+    }
+
+    .photo-two {
+      left: 1638px;
+      top: 298px;
+      bottom: auto;
+      width: 330px;
+      height: 360px;
+      --r: 5deg;
+      transform: rotate(5deg);
+      z-index: 18;
+    }
+
+    .turntable {
+      left: 1888px;
+      top: 94px;
+      bottom: auto;
+      width: 365px;
+      --r: 3deg;
+      transform: rotate(3deg);
+      z-index: 22;
+    }
+
+    .turntable-base {
+      width: 100%;
+      background: transparent;
+      mix-blend-mode: normal;
+      filter: contrast(1.04) saturate(.95);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .badge {
+      left: 2298px;
+      top: 118px;
+      width: 175px;
+      --r: 9deg;
+      transform: rotate(9deg);
+      z-index: 30;
+    }
+
+    .tattoo-strip {
+      position: absolute;
+      left: 1978px;
+      bottom: 78px;
+      z-index: 28;
+      width: 520px;
+      height: 150px;
+      object-fit: contain;
+      object-position: center;
+      opacity: .96;
+      mix-blend-mode: multiply;
+      filter: contrast(1.18) saturate(.92) drop-shadow(0 18px 24px rgba(0,0,0,.18));
+      transform: rotate(.5deg);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: transform .24s ease, filter .24s ease, opacity .24s ease;
+    }
+
+    .tattoo-strip:hover {
+      opacity: 1;
+      transform: translateY(-5px) rotate(.5deg);
+      filter:
+        contrast(1.18) saturate(.92)
+        drop-shadow(0 0 18px rgba(167,199,231,.38))
+        drop-shadow(0 18px 24px rgba(0,0,0,.20));
+    }
+
+    .hint-line {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      z-index: 90;
+      color: rgba(232,236,239,.52);
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      pointer-events: none;
+      transform: translateX(-50%);
+    }
+
+    /* ========== Content pages ========== */
+    .page-shell {
+      position: absolute;
+      left: 7vw;
+      right: 7vw;
+      top: 104px;
+      bottom: 58px;
+      overflow: hidden;
+      border: 1px solid rgba(28,43,72,.13);
+      background: rgba(232,236,239,.74);
+      box-shadow: 0 32px 88px rgba(28,43,72,.16);
+    }
+
+    .page-head {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 36px;
+      padding: 34px 42px 0;
+    }
+
+    .page-head .kicker {
+      margin-bottom: 10px;
+      color: rgba(28,43,72,.55);
+      font-size: 12px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    .page-head h2 {
+      color: var(--midnight);
+      font-size: 52px;
+      font-style: italic;
+      font-weight: 400;
+      line-height: .94;
+    }
+
+    .page-head p {
+      width: 390px;
+      padding-top: 8px;
+      color: rgba(28,43,72,.62);
+      font-size: 13px;
+      line-height: 1.8;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .placeholder {
+      color: rgba(28,43,72,.72);
+      font-size: 15px;
+      line-height: 2.05;
+      letter-spacing: .03em;
+    }
+
+    .placeholder .line {
+      display: block;
+      min-height: 1.9em;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed rgba(28,43,72,.16);
+    }
+
+.profile-layout,
+.memo-layout,
+.phone-layout {
+  position: relative;
+  z-index: 4;
+  height: calc(100% - 118px);
+  display: grid;
+  grid-template-columns: 35% 65%;
+  gap: 34px;
+  padding: 30px 42px 42px;
+  min-height: 0;
+}
+
+    .paper {
+      overflow: auto;
+      padding: 34px 38px;
+      border: 1px solid rgba(28,43,72,.12);
+      background:
+        linear-gradient(rgba(243,238,226,.9), rgba(243,238,226,.9)),
+        url("images/paper-manuscript01.png") center / cover no-repeat;
+      box-shadow: inset 0 0 58px rgba(255,255,255,.32);
+    }
+
+    .profile-layout img {
+      align-self: center;
+      justify-self: center;
+      width: 270px;
+      filter: drop-shadow(0 26px 32px rgba(28,43,72,.22));
+      transform: rotate(-4deg);
+    }
+
+    .data-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 12px 18px;
+      margin-bottom: 30px;
+      color: rgba(28,43,72,.78);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: .05em;
+    }
+
+    .data-row b {
+      color: rgba(28,43,72,.48);
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .memo-layout img {
+      align-self: end;
+      width: 340px;
+      filter: drop-shadow(0 26px 32px rgba(28,43,72,.22));
+      transform: rotate(-2deg);
+    }
+
+.memo-paper {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  height: 100%;
+  padding-bottom: 60px;
+}
+
+    .typed {
+      white-space: pre-wrap;
+      color: rgba(28,43,72,.78);
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    .cursor {
+      animation: blink .9s infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    .diary-book {
+      position: relative;
+      z-index: 4;
+      height: calc(100% - 142px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin: 28px 42px 42px;
+      overflow: hidden;
+      border: 1px solid rgba(28,43,72,.13);
+      background:
+        linear-gradient(rgba(243,238,226,.9), rgba(243,238,226,.9)),
+        url("images/paper-manuscript01.png") center / cover no-repeat;
+      box-shadow: 0 22px 60px rgba(28,43,72,.15);
+    }
+
+    .diary-book::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, rgba(28,43,72,.13), transparent);
+      pointer-events: none;
+    }
+
+    .diary-left,
+    .diary-right {
+      overflow: auto;
+      padding: 42px;
+    }
+
+    .diary-left {
+      border-right: 1px solid rgba(28,43,72,.08);
+    }
+
+    .diary-date {
+      color: rgba(28,43,72,.55);
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .diary-title {
+      margin-top: 12px;
+      margin-bottom: 22px;
+      color: var(--midnight);
+      font-size: 36px;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .diary-photo {
+      width: 220px;
+      margin-bottom: 26px;
+      padding: 10px 10px 34px;
+      background: rgba(232,236,239,.92);
+      box-shadow: 0 18px 40px rgba(28,43,72,.16);
+      transform: rotate(-5deg);
+    }
+
+    .diary-photo img {
+      width: 100%;
+      height: 146px;
+      object-fit: cover;
+    }
+
+    .diary-photo span {
+      display: block;
+      margin-top: 8px;
+      color: var(--midnight);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+    }
+
+
+    .diary-reader {
+      position: relative;
+      z-index: 4;
+      height: calc(100% - 120px);
+      margin: 28px 42px 42px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 28px;
+      perspective: 1400px;
+    }
+
+    .diary-tabs {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      padding-top: 12px;
+    }
+
+    .diary-tab {
+      position: relative;
+      padding: 16px 18px;
+      border: 1px solid rgba(28,43,72,.14);
+      background: rgba(232,236,239,.56);
+      color: rgba(28,43,72,.62);
+      box-shadow: 0 12px 26px rgba(28,43,72,.1);
+      text-align: left;
+      transition: transform .2s ease, background .2s ease, color .2s ease;
+    }
+
+    .diary-tab:hover,
+    .diary-tab.is-active {
+      background: rgba(232,236,239,.88);
+      color: var(--midnight);
+      transform: translateX(6px);
+    }
+
+    .diary-tab b {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .diary-tab span {
+      display: block;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .diary-flipbook {
+      position: relative;
+      min-height: 0;
+    }
+
+    .diary-sheet {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: minmax(250px, 34%) 1fr;
+      overflow: hidden;
+      border: 1px solid rgba(28,43,72,.14);
+      background:
+        linear-gradient(rgba(243,238,226,.92), rgba(243,238,226,.92)),
+        url("images/paper-manuscript01.png") center / cover no-repeat;
+      box-shadow: 0 26px 76px rgba(28,43,72,.18);
+      transform-origin: left center;
+      animation: diaryTurn .42s ease both;
+    }
+
+    @keyframes diaryTurn {
+      0% { opacity: .1; transform: rotateY(-18deg) translateX(-18px); }
+      100% { opacity: 1; transform: rotateY(0) translateX(0); }
+    }
+
+    .diary-sheet::before {
+      content: "";
+      position: absolute;
+      left: 34%;
+      top: 0;
+      bottom: 0;
+      width: 30px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, rgba(28,43,72,.14), transparent);
+      pointer-events: none;
+    }
+
+    .diary-cover-page,
+    .diary-paper-page {
+      min-height: 0;
+      overflow: auto;
+      padding: 40px;
+    }
+
+    .diary-cover-page {
+      border-right: 1px solid rgba(28,43,72,.08);
+    }
+
+    .diary-entry-count {
+      margin-bottom: 18px;
+      color: rgba(28,43,72,.52);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .diary-entry-title {
+      margin-bottom: 18px;
+      color: var(--midnight);
+      font-size: clamp(34px, 4vw, 54px);
+      font-style: italic;
+      font-weight: 400;
+      line-height: .95;
+    }
+
+    .diary-entry-date {
+      margin-bottom: 28px;
+      color: rgba(28,43,72,.56);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .diary-entry-mark {
+      width: min(230px, 100%);
+      margin-top: 28px;
+      padding: 12px 12px 34px;
+      background: rgba(232,236,239,.8);
+      box-shadow: 0 18px 38px rgba(28,43,72,.13);
+      transform: rotate(-4deg);
+    }
+
+    .diary-entry-mark img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      filter: grayscale(.08) saturate(.82) contrast(1.02);
+    }
+
+    .diary-entry-mark span {
+      display: block;
+      margin-top: 9px;
+      color: rgba(28,43,72,.68);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+    }
+
+    .diary-paper-page {
+      color: rgba(28,43,72,.82);
+      font-size: 15px;
+      line-height: 1.92;
+      letter-spacing: .01em;
+    }
+
+    .diary-paper-page p {
+      margin-bottom: 1.05em;
+    }
+
+    .diary-paper-page strong {
+      color: var(--midnight);
+      font-weight: 700;
+    }
+
+    .diary-paper-page em {
+      color: rgba(28,43,72,.72);
+    }
+
+    .diary-paper-page blockquote {
+      margin: 18px 0;
+      padding: 14px 18px;
+      border-left: 3px solid rgba(28,43,72,.26);
+      background: rgba(232,236,239,.42);
+      font-style: italic;
+    }
+
+    .diary-paper-page ul {
+      margin: 12px 0 18px 22px;
+    }
+
+    .diary-paper-page li {
+      margin-bottom: 9px;
+    }
+
+    .diary-controls {
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      background: rgba(232,236,239,.74);
+      border: 1px solid rgba(28,43,72,.12);
+      box-shadow: 0 14px 32px rgba(28,43,72,.12);
+      backdrop-filter: blur(8px);
+    }
+
+    .diary-controls button {
+      min-width: 92px;
+      padding: 10px 13px;
+      background: var(--midnight);
+      color: var(--platinum);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .diary-controls button:disabled {
+      cursor: default;
+      opacity: .35;
+    }
+
+    .diary-page-indicator {
+      min-width: 54px;
+      color: rgba(28,43,72,.62);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      text-align: center;
+    }
+
+
+
+    /* ========== Diary v2: index cards + full middle frame reader ========== */
+    .diary-shell {
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(135deg, rgba(232,236,239,.84), rgba(196,216,229,.70)),
+        radial-gradient(circle at 14% 22%, rgba(255,255,255,.55), transparent 30%);
+    }
+
+    .diary-shell .page-head {
+      flex: 0 0 auto;
+    }
+
+    .diary-home {
+      position: relative;
+      z-index: 4;
+      flex: 1 1 auto;
+      min-height: 0;
+      margin: 26px 42px 42px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 26px;
+    }
+
+    .diary-index-card {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      padding: 18px 18px 22px;
+      border: 1px solid rgba(28,43,72,.13);
+      background:
+        linear-gradient(rgba(243,238,226,.90), rgba(243,238,226,.90)),
+        url("images/paper-manuscript01.png") center / cover no-repeat;
+      box-shadow: 0 24px 56px rgba(28,43,72,.14);
+      text-align: left;
+      transition: transform .24s ease, box-shadow .24s ease, filter .24s ease;
+    }
+
+    .diary-index-card:hover {
+      transform: translateY(-8px) rotate(var(--tilt));
+      box-shadow: 0 32px 74px rgba(28,43,72,.22);
+      filter: drop-shadow(0 0 16px rgba(167,199,231,.45));
+    }
+
+    .diary-index-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--midnight), var(--cerulean), var(--baby));
+      opacity: .72;
+    }
+
+    .diary-card-photo {
+      height: 42%;
+      min-height: 160px;
+      margin-bottom: 20px;
+      padding: 10px 10px 30px;
+      background: rgba(232,236,239,.86);
+      box-shadow: 0 16px 34px rgba(28,43,72,.14);
+      transform: rotate(calc(var(--tilt) * -1));
+    }
+
+    .diary-card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(.08) saturate(.82) contrast(1.03);
+    }
+
+    .diary-card-no {
+      margin-bottom: 12px;
+      color: rgba(28,43,72,.50);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .diary-index-card h3 {
+      margin-bottom: 14px;
+      color: var(--midnight);
+      font-size: clamp(30px, 3vw, 44px);
+      font-style: italic;
+      font-weight: 400;
+      line-height: .95;
+    }
+
+    .diary-index-card p {
+      color: rgba(28,43,72,.66);
+      font-size: 13px;
+      line-height: 1.7;
+      letter-spacing: .04em;
+    }
+
+    .diary-open-hint {
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      color: rgba(28,43,72,.42);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .diary-detail {
+      position: relative;
+      z-index: 4;
+      flex: 1 1 auto;
+      min-height: 0;
+      margin: 26px 42px 42px;
+      display: grid;
+      grid-template-columns: minmax(260px, 32%) minmax(0, 1fr);
+      gap: 26px;
+    }
+
+    .diary-detail[hidden],
+    .diary-home[hidden],
+    .birthday-modal[hidden] {
+      display: none !important;
+    }
+
+    .diary-detail-cover {
+      position: relative;
+      overflow: hidden;
+      padding: 34px 30px;
+      border: 1px solid rgba(28,43,72,.13);
+      background:
+        linear-gradient(rgba(232,236,239,.78), rgba(232,236,239,.78)),
+        radial-gradient(circle at 20% 20%, rgba(167,199,231,.46), transparent 42%);
+      box-shadow: 0 22px 54px rgba(28,43,72,.13);
+    }
+
+    .diary-detail-back {
+      margin-bottom: 24px;
+      padding: 10px 14px;
+      border: 1px solid rgba(28,43,72,.16);
+      background: rgba(232,236,239,.76);
+      color: var(--midnight);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      transition: .2s ease;
+    }
+
+    .diary-detail-back:hover {
+      transform: translateX(-4px);
+      background: rgba(255,255,255,.74);
+    }
+
+    .diary-detail-count {
+      margin-bottom: 14px;
+      color: rgba(28,43,72,.52);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .diary-detail-title {
+      margin-bottom: 18px;
+      color: var(--midnight);
+      font-size: clamp(38px, 4vw, 58px);
+      font-style: italic;
+      font-weight: 400;
+      line-height: .92;
+    }
+
+    .diary-detail-date {
+      margin-bottom: 26px;
+      color: rgba(28,43,72,.58);
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .diary-detail-photo {
+      width: min(260px, 100%);
+      padding: 12px 12px 34px;
+      background: rgba(232,236,239,.88);
+      box-shadow: 0 18px 38px rgba(28,43,72,.16);
+      transform: rotate(-4deg);
+    }
+
+    .diary-detail-photo img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      filter: grayscale(.06) saturate(.82) contrast(1.03);
+    }
+
+    .diary-detail-photo span {
+      display: block;
+      margin-top: 9px;
+      color: rgba(28,43,72,.68);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+    }
+
+    .diary-detail-paper {
+      position: relative;
+      min-height: 0;
+      overflow: auto;
+      padding: 42px 48px 80px;
+      border: 1px solid rgba(28,43,72,.13);
+      background:
+        linear-gradient(rgba(243,238,226,.94), rgba(243,238,226,.94)),
+        url("images/paper-manuscript01.png") center / cover no-repeat;
+      box-shadow: inset 0 0 70px rgba(255,255,255,.34), 0 24px 64px rgba(28,43,72,.13);
+      color: rgba(28,43,72,.82);
+      font-size: 15px;
+      line-height: 1.92;
+      letter-spacing: .01em;
+      animation: diaryFadeIn .28s ease both;
+    }
+
+    @keyframes diaryFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .diary-detail-paper p {
+      margin-bottom: 1.05em;
+    }
+
+    .diary-detail-paper .diary-line {
+      display: block;
+    }
+
+    .diary-detail-paper .diary-line + .diary-line {
+      margin-top: .18em;
+    }
+
+    .diary-detail-paper strong {
+      color: var(--midnight);
+      font-weight: 700;
+    }
+
+    .diary-detail-paper em {
+      color: rgba(28,43,72,.72);
+    }
+
+    .diary-detail-paper blockquote {
+      margin: 18px 0;
+      padding: 14px 18px;
+      border-left: 3px solid rgba(28,43,72,.26);
+      background: rgba(232,236,239,.42);
+      font-style: italic;
+    }
+
+    .diary-detail-paper ul {
+      margin: 12px 0 18px 22px;
+    }
+
+    .diary-detail-paper li {
+      margin-bottom: 9px;
+    }
+
+    .diary-detail-controls {
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      border: 1px solid rgba(28,43,72,.12);
+      background: rgba(232,236,239,.78);
+      box-shadow: 0 14px 32px rgba(28,43,72,.12);
+      backdrop-filter: blur(8px);
+    }
+
+    .diary-detail-controls button {
+      min-width: 92px;
+      padding: 10px 13px;
+      background: var(--midnight);
+      color: var(--platinum);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .diary-detail-controls button:disabled {
+      cursor: default;
+      opacity: .35;
+    }
+
+    .diary-page-indicator {
+      min-width: 54px;
+      color: rgba(28,43,72,.62);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* ========== Birthday Modal ========== */
+    .birthday-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: grid;
+      place-items: center;
+      background: rgba(28, 43, 72, .36);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .28s ease, visibility .28s ease;
+    }
+
+    .birthday-modal.is-show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .birthday-search-box,
+    .birthday-message-box {
+      position: relative;
+      border: 1px solid rgba(28, 43, 72, .16);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.7), transparent 34%),
+        linear-gradient(135deg, rgba(232,236,239,.96), rgba(196,216,229,.9));
+      box-shadow: 0 30px 90px rgba(28, 43, 72, .28);
+      backdrop-filter: blur(12px);
+    }
+
+    .birthday-search-box {
+      width: min(520px, calc(100vw - 48px));
+      padding: 52px 48px 44px;
+    }
+
+    .birthday-search-form {
+      display: flex;
+      gap: 12px;
+    }
+
+    .birthday-search-form input {
+      flex: 1;
+      min-width: 0;
+      padding: 16px 18px;
+      border: 1px solid rgba(28, 43, 72, .18);
+      outline: none;
+      background: rgba(255,255,255,.56);
+      color: var(--midnight);
+      font-size: 16px;
+      letter-spacing: .12em;
+    }
+
+    .birthday-search-form button {
+      width: 116px;
+      background: var(--midnight);
+      color: var(--platinum);
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .birthday-message-box {
+      width: min(620px, calc(100vw - 48px));
+      padding: 54px 60px;
+    }
+
+    .birthday-message-text {
+      color: var(--midnight);
+      font-size: 18px;
+      line-height: 1.95;
+      letter-spacing: .02em;
+    }
+
+    .birthday-message-text p {
+      margin-bottom: .72em;
+    }
+
+    .birthday-message-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .birthday-close {
+      position: absolute;
+      right: 14px;
+      top: 12px;
+      width: 34px;
+      height: 34px;
+      color: rgba(28, 43, 72, .48);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .birthday-close:hover {
+      color: var(--midnight);
+    }
+
+    .birthday-search-box.shake {
+      animation: birthdayShake .28s ease;
+    }
+
+    @keyframes birthdayShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+
+
+    /* ========== Static Memo / Birthday Rewrite / Countdown ========== */
+    .memo-static {
+      display: grid;
+      gap: 16px;
+      color: rgba(28,43,72,.82);
+    }
+
+    .memo-static article {
+      padding: 20px 18px 18px;
+      border: 1px solid rgba(28,43,72,.13);
+      background: rgba(255,255,255,.44);
+      box-shadow: 0 14px 30px rgba(28,43,72,.08);
+    }
+
+    .memo-static h3 {
+      margin-bottom: 12px;
+      color: var(--midnight);
+      font-size: 20px;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: .05em;
+    }
+
+    .memo-static p {
+      margin-bottom: 11px;
+      font-size: 14px;
+      line-height: 1.82;
+      letter-spacing: .015em;
+    }
+
+    .phone-empty {
+      height: 100%;
+      border: 1px dashed rgba(28,43,72,.12);
+      background: rgba(232,236,239,.34);
+    }
+
+
+    .phone-shell {
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,.52), transparent 32%),
+        linear-gradient(135deg, rgba(232,236,239,.78), rgba(196,216,229,.70));
+    }
+
+    .phone-chat-reader {
+      position: relative;
+      z-index: 4;
+      height: calc(100% - 118px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      gap: 28px;
+      padding: 30px 42px 42px;
+      min-height: 0;
+    }
+
+    .phone-chat-card {
+      position: relative;
+      min-height: 0;
+      padding: 18px;
+      border: 1px solid rgba(28,43,72,.13);
+      background:
+        linear-gradient(rgba(243,238,226,.86), rgba(243,238,226,.86)),
+        url("images/paper-manuscript01.png") center / cover no-repeat;
+      box-shadow: 0 26px 76px rgba(28,43,72,.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transform-origin: left center;
+    }
+
+    .phone-chat-card.is-turning {
+      animation: phonePageTurn .38s ease both;
+    }
+
+    @keyframes phonePageTurn {
+      0% { opacity: .28; transform: rotateY(-10deg) translateX(-10px); }
+      100% { opacity: 1; transform: rotateY(0) translateX(0); }
+    }
+
+    .phone-chat-card img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 18px 44px rgba(28,43,72,.18);
+      border: 1px solid rgba(28,43,72,.08);
+      background: rgba(255,255,255,.34);
+    }
+
+    .phone-chat-side {
+      border: 1px solid rgba(28,43,72,.13);
+      background: rgba(232,236,239,.58);
+      box-shadow: 0 18px 44px rgba(28,43,72,.12);
+      padding: 28px 24px;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .phone-chat-label {
+      color: rgba(28,43,72,.48);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .phone-chat-count {
+      color: var(--midnight);
+      font-size: 46px;
+      font-style: italic;
+      line-height: .9;
+    }
+
+    .phone-chat-side p {
+      color: rgba(28,43,72,.62);
+      font-size: 13px;
+      line-height: 1.8;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .phone-chat-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .phone-chat-controls button {
+      padding: 11px 12px;
+      background: var(--midnight);
+      color: var(--platinum);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: .2s ease;
+    }
+
+    .phone-chat-controls button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #263a60;
+    }
+
+    .phone-chat-controls button:disabled {
+      opacity: .35;
+      cursor: default;
+    }
+
+    .us-countdown {
+      position: fixed;
+      left: 34px;
+      bottom: 22px;
+      z-index: 140;
+      transform: none;
+      padding: 6px 12px;
+      border: 1px solid rgba(232,236,239,.18);
+      border-radius: 999px;
+      background: rgba(8, 18, 46, .42);
+      color: rgba(232,236,239,.78);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .birthday-modal {
+      perspective: 1200px;
+    }
+
+    .birthday-card {
+      position: relative;
+      width: min(540px, calc(100vw - 48px));
+      min-height: 370px;
+      transform-style: preserve-3d;
+      transition: transform .7s ease;
+    }
+
+    .birthday-modal.is-flipped .birthday-card {
+      transform: rotateY(180deg);
+    }
+
+    .birthday-face {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(28, 43, 72, .16);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.72), transparent 34%),
+        linear-gradient(135deg, rgba(232,236,239,.96), rgba(196,216,229,.90));
+      box-shadow: 0 30px 90px rgba(28, 43, 72, .28);
+      backdrop-filter: blur(12px);
+      backface-visibility: hidden;
+      overflow: hidden;
+    }
+
+    .birthday-front {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 52px 48px 44px;
+    }
+
+    .birthday-back {
+      padding: 50px 54px;
+      transform: rotateY(180deg);
+    }
+
+    .birthday-doodle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 26px;
+      color: rgba(28,43,72,.42);
+      font-size: 26px;
+      letter-spacing: .18em;
+    }
+
+    .birthday-doodle span:nth-child(2) {
+      color: rgba(142,177,209,.84);
+      font-size: 32px;
+    }
+
+    .birthday-message-text p {
+      min-height: 1.95em;
+    }
+
+    .love-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 260;
+      display: grid;
+      place-items: center;
+      background: rgba(28,43,72,.18);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .28s ease, visibility .28s ease;
+    }
+
+    .love-popup.is-show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .love-popup-card {
+      position: relative;
+      width: min(360px, calc(100vw - 56px));
+      padding: 34px 34px 30px;
+      border: 1px solid rgba(28,43,72,.16);
+      background: rgba(243,238,226,.96);
+      color: var(--midnight);
+      box-shadow: 0 28px 72px rgba(28,43,72,.30);
+      text-align: center;
+    }
+
+    .love-popup-card p {
+      margin-bottom: 14px;
+      font-size: 22px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .love-popup-card small {
+      display: block;
+      color: rgba(28,43,72,.58);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      body::before {
+        content: "This page is designed for a desktop browser.";
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        padding: 30px;
+        background: #05070b;
+        color: var(--platinum);
+        text-align: center;
+        line-height: 1.8;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <section class="gate" id="gate">
+    <div class="gate-panel">
+      <div class="gate-card">
+        <div class="gate-label">
+          <span>Private Access</span>
+          <span>After Midnight</span>
+        </div>
+        <h1 class="gate-title">For Nicole<br>Only</h1>
+        <p class="gate-subtitle">A room behind the stage. A collection left open.</p>
+        <div class="gate-form">
+          <input id="passwordInput" type="password" placeholder="PASSWORD" autocomplete="off">
+          <button id="enterBtn" type="button">Enter</button>
+        </div>
+        <div class="gate-hint" id="gateHint"></div>
+      </div>
+    </div>
+    <div class="gate-photo-wrap">
+      <div class="gate-photo">
+        <img src="images/gate.jpg" alt="gate portrait">
+      </div>
+      <div class="gate-date">06 / 09</div>
+    </div>
+  </section>
+
+  <main class="site" id="site">
+    <div class="topbar">
+      <strong id="topTitle">Midnight Collection</strong>
+      <span id="topHint">Drag / Scroll Horizontally</span>
+    </div>
+
+    <button class="back-btn" id="backBtn" type="button">Back</button>
+    <div class="us-countdown" id="usCountdown"></div>
+
+    <section class="page is-active" id="page-home">
+      <div class="home-scroll" id="homeScroll">
+        <div class="home-world">
+          <div class="home-title">
+            <div class="tiny">No public lights. No rules.</div>
+            <h1>After the<br>curtain.</h1>
+            <p>old paper, blue shadows, whiskey, vinyl, film noise, and four things left for her.</p>
+          </div>
+
+          <div class="home-zone-title zone-01">Manuscript / Whiskey</div>
+          <div class="home-zone-title zone-02">Private Still / Diary</div>
+          <div class="home-zone-title zone-03">Vinyl / File</div>
+
+          <img class="filmstrip" src="images/filmstrip01.png" alt="filmstrip">
+
+          <img class="home-item typewriter" id="typewriterBtn" src="images/typewriter01.png" alt="typewriter">
+
+          <div class="home-item whiskey-card" id="whiskeyBtn">
+            <img src="images/whiskey01.jpg" alt="whiskey">
+            <span>whiskey</span>
+          </div>
+
+          <div class="home-item main-photo" id="photoBtn">
+            <img src="images/hero.jpg" alt="hero">
+            <span>private still</span>
+          </div>
+
+          <img class="home-item phone" id="phoneBtn" src="images/phone.jpg" onerror="this.onerror=null;this.src='images/phone.png';" alt="phone">
+
+          <img class="home-item books" id="booksBtn" src="images/journal-stack.png" alt="books">
+
+          <div class="home-item photo-card photo-one" id="diaryBtn">
+            <img src="images/film01.jpg" alt="film one">
+            <span>diary</span>
+          </div>
+
+          <div class="home-item photo-card photo-two" id="phonePhotoBtn">
+            <img src="images/film02.jpg" alt="film two">
+            <span>film / noise</span>
+          </div>
+
+          <div class="home-item turntable" id="turntableBtn">
+            <img class="turntable-base" src="images/turntable01-transparent.png" alt="turntable">
+          </div>
+
+          <img class="home-item badge" id="profileBtn" src="images/badge-crybaby.png" alt="badge">
+          <img class="tattoo-strip" id="tattooBirthdayBtn" src="images/nicole-forever-banner.jpg" alt="Nicole tattoo">
+
+          <div class="hint-line">← move through the room →</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-profile">
+      <div class="page-shell">
+        <div class="page-head">
+          <div>
+            <div class="kicker">Girlfriend File</div>
+            <h2>Profile File</h2>
+          </div>
+          <p>A private file kept away from public lights. This page is for profile content.</p>
+        </div>
+        <div class="profile-layout">
+          <img src="images/badge-crybaby.png" alt="badge">
+          <div class="paper">
+            <div class="data-row">
+              <b>Name</b><span>Nicole / Nikki / Ying</span>
+              <b>Access</b><span>Private Archive</span>
+              <b>Role</b><span>First Audience</span>
+              <b>Status</b><span>After Midnight Only</span>
+            </div>
+            <div class="placeholder">
+              <p>By the time I opened the backend of the webpage, it was already past two in the morning.</p>
+              <p>The screen came alive. The title bar was empty, and the cursor blinked inside that little white box. I thought, at first, that it would be easy. Girlfriend profile. Sounds simple enough. Name, nicknames, things she likes, things she doesn’t. A few photographs. That should be enough to make a page look complete.</p>
+              <p>I typed Nicole.</p>
+              <p>Paused for a while.</p>
+              <p>Then I typed Nikki.</p>
+              <p>And finally, beside them, I typed ying.</p>
+              <p>Three names, sitting there in a row. I looked at them for a long time. I meant to keep going, but my hand had already reached toward the space beside the ashtray.</p>
+              <p>The lighter wasn’t there.</p>
+              <p>The desk was a beautiful little disaster. Old playbills, record sleeves, typing paper, a guitar pick, half a cup of cold coffee, and a few loose sheets I’d dropped there without thinking. While looking for the lighter, I found a photograph of a little dog first.</p>
+              <p>On the back of it, she had written one sentence:</p>
+              <p>There are no gaps between the paws. Only fluff.</p>
+              <p>I stared at that line for a few seconds and laughed.</p>
+              <p>When she sent me that photograph, she had been terribly serious about it. I told her it sounded like some kind of medical conclusion. She replied almost at once:</p>
+              <p>You don’t understand.</p>
+              <p>And she was right. I didn’t. Not really.</p>
+              <p>That fluffy little creature looked straight into the camera with a very grave expression, as if it were deciding whether I had any right to exist near its house. I said maybe it didn’t like me.</p>
+              <p>She answered:</p>
+              <p>It’s good at judging people.</p>
+              <p>A few minutes later, she sent another photograph. The dog was lying beside her, half its face buried in fur. The picture was a little blurry, the light nothing special. Her hand appeared at the edge of the frame, fingers resting on the dog’s back.</p>
+              <p>I looked at that hand, and suddenly I could almost hear the way she spoke.</p>
+              <p>And then I thought, well, it didn’t matter much whether that fluffy little creature liked me or not.</p>
+              <p>My own fluffy little creature liked me.</p>
+              <p>The lighter still hadn’t turned up.</p>
+              <p>I kept searching and found a ring box. Empty now. The ring was with her.</p>
+              <p>I found it in an old shop. Silver, worn, with markings that looked as if they had already survived a few lives. It didn’t shine very much behind the glass. The shopkeeper told me it had been sitting there for a long time, and hardly anyone ever asked about it. I asked him to take it out. Held it in my hand for a while.</p>
+              <p>By then, I was already thinking of Nikki.</p>
+              <p>I knew she wouldn’t like something too new. Anything too bright, too clean, too eager to be loved would look awkward in her hands. When she looks at old things, she takes her time. Her fingers touch the edges first, then she turns the thing over, as if waiting for it to explain where it came from.</p>
+              <p>When I gave her the ring, she didn’t put it on right away.</p>
+              <p>She asked, “Who did this belong to before?”</p>
+              <p>I said, “No idea. Maybe someone with a rotten temper. Maybe some unlucky poet. Maybe just someone who bought a ring and regretted it later.”</p>
+              <p>She lowered her head and smiled.</p>
+              <p>“You make things up very smoothly.”</p>
+              <p>“I respect every old object’s right to talk nonsense.”</p>
+              <p>She held the ring in her palm for a while. Then she put it on and raised her hand toward the light.</p>
+              <p>Once it was on her hand, the ring suddenly had a place.</p>
+              <p>She didn’t say whether she liked it. She only turned her wrist a little and watched the light slip across the silver.</p>
+              <p>Later, when we went out to eat, she was still wearing it. The menu lay open on the table. She lowered her head to read the names of the dishes, and her other hand, under the table, lightly touched the surface of the ring.</p>
+              <p>Writing this down, I remembered the night she sat in my room watching a film.</p>
+              <p>The room was dark. The screen was glowing. She sat on the rug, her drink beside her knee. She doesn’t talk much in the middle of a movie. Even when the film is long, she waits until a part has truly ended before putting her cup down.</p>
+              <p>That night, she asked me, “After you finish playing a character, do you miss him?”</p>
+              <p>That question kept me quiet for a while.</p>
+              <p>People usually ask whether a role was fun. Whether the costume was difficult. Which scene was the hardest.</p>
+              <p>I said yes.</p>
+              <p>Some of them, yes.</p>
+              <p>She didn’t chase the answer. Didn’t put on that expression people wear when they’re waiting for a story to be performed for them. She only nodded and kept looking at the screen.</p>
+              <p>After a while, she said, “Then he probably remembers you too.”</p>
+              <p>I looked at her.</p>
+              <p>She was still watching the film, as if what she had just said were only a coin she had casually placed on the table.</p>
+              <p>I wrote that sentence down later.</p>
+              <p>When she watches my work, she rarely tears me and the character apart in some rough, careless way. She knows that when I play a person, I really do go close to him. She also knows that once you’ve gone close, you don’t walk back out completely clean.</p>
+              <p>She doesn’t treat those characters like noisy little labels. She doesn’t treat me like a face people have grown used to looking at.</p>
+              <p>Her questions always land somewhere further in.</p>
+              <p>On the webpage, I wrote:</p>
+              <p>She is my first audience.</p>
+              <p>It looked a little solemn. I stared at it for a few seconds, but I didn’t delete it.</p>
+              <p>Because it was true.</p>
+              <p>Then I found a photograph by the sea.</p>
+              <p>A blue dress. A straw hat. A strong wind. One of her hands held the brim of the hat down, and the other reached toward the camera, as if the person taking the picture had been standing too far away. There was a heart drawn in the sand. Not perfectly round. The edges had been thinned by wind and sand.</p>
+              <p>She was smiling in the photograph. Her hair was a mess. The hem of her dress was a mess too.</p>
+              <p>I’ve looked at that picture many times.</p>
+              <p>She looks bright in it. But that brightness is not empty. She likes blue. She likes the sea. She also likes mysteries, horror films, old movies, and stories with shadows in them.</p>
+              <p>She can laugh lightly by the sea, and she can also ask, quite seriously, whether a character might remember the actor who once played him.</p>
+              <p>She looks after little dogs. She saves a place for an old playbill. She also keeps time, distance, money, and tomorrow’s tasks all somewhere in her mind, quietly calculating them.</p>
+              <p>Before she moves close to anything, she thinks it through.</p>
+              <p>That isn’t hesitation.</p>
+              <p>She simply knows that to like something, to love someone, costs real things. Time. Energy. Heart. Distance. And many things that can’t be written on a receipt.</p>
+              <p>After she has counted all of that and still walks forward, that step carries weight.</p>
+              <p>I put the seaside photograph into the webpage folder and renamed the file blue.</p>
+              <p>Then I thought it was too simple.</p>
+              <p>Changed it to nikki_blue.</p>
+              <p>Still simple.</p>
+              <p>In the end, I didn’t change it again.</p>
+              <p>The lover profile on the screen filled up little by little. Not in the way I first imagined. Not like a form. Not like a few pretty lines of introduction.</p>
+              <p>It began turning into things I actually remembered.</p>
+              <p>I finally found the lighter in the pocket of my coat.</p>
+              <p>I stood by the desk and looked for a while at everything I had pulled out. The little dog photograph was slipped back into the playbill. The ring box hadn’t been closed properly. The seaside photograph was still waiting on the right side of the screen.</p>
+              <p>And the webpage title was no longer empty.</p>
+              <p>I had meant to tidy the desk.</p>
+              <p>Put everything back where it belonged. Make the page look more like a proper gift.</p>
+              <p>In the end, I didn’t.</p>
+              <p>She had been here once. I had found the lighter. And I didn’t much feel like putting the room back the way it was.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-memo">
+      <div class="page-shell">
+        <div class="page-head">
+          <div>
+            <div class="kicker">Memo / Typewriter</div>
+            <h2>Typed Memo</h2>
+          </div>
+          <p>The typewriter keeps the little things: habits, distance, and private notes.</p>
+        </div>
+        <div class="memo-layout">
+          <img src="images/typewriter01.png" alt="typewriter">
+          <div class="paper memo-paper">
+            <section class="memo-static">
+              <article>
+                <h3>Time Difference</h3>
+                <p>Shanghai stayed pinned to the first screen, Los Angeles beside it. The numbers looked harmless enough, until her night fell into my daylight. Only then did I realize the distance between us was far too great.</p>
+                <p>I began to miss her.</p>
+                <p>Her good night often arrived while someone was still knocking on my door.</p>
+                <p>My good morning sometimes reached her when her room had already gone quiet.</p>
+                <p>This planet is terribly rude.</p>
+              </article>
+
+              <article>
+                <h3>Messages</h3>
+                <p>When she is outside, her replies are short.</p>
+                <p>After she gets back to her room, they grow a little longer.</p>
+                <p>Sometimes it is only a small proof.</p>
+                <p>Proof that, when she stopped somewhere in the world, she thought of me.</p>
+              </article>
+
+              <article>
+                <h3>Our Movie List</h3>
+                <p>Horror.</p>
+                <p>Suspense.</p>
+                <p>Strange old things.</p>
+                <p>Nothing too polished.</p>
+                <p>Notes beside the titles:</p>
+                <p>Bad ending. / Good silence. / Pause here at 01:17:32. / Watch together. / She will hate this. / She might like this.</p>
+              </article>
+
+              <article>
+                <h3>Nail Polish</h3>
+                <p>The nail polish she put on me.</p>
+                <p>The blue came off first.</p>
+                <p>The red stayed a little longer.</p>
+                <p>A bit of metallic color survived on the edge of one nail through three interviews.</p>
+                <p>When someone asked about it, I put my hand in my pocket and thought of her lowering her head, holding my fingers, taking every color seriously.</p>
+              </article>
+
+              <article>
+                <h3>Language</h3>
+                <p>Translation software always does terrible things to her Chinese.</p>
+                <p>There was one sentence it turned into something like a police report written by a depressed machine.</p>
+                <p>Later, she explained it to me herself.</p>
+                <p>The same words suddenly had warmth.</p>
+                <p>Nikki’s mouth seemed to have some kind of magic in it.</p>
+              </article>
+
+              <article>
+                <h3>Sticky Notes</h3>
+                <p>The sticky notes sent from Shanghai were tucked inside a book.</p>
+                <p>Her handwriting sat in the margins.</p>
+                <p>One word had been circled twice.</p>
+                <p>A question mark followed a line of poetry.</p>
+                <p>The blue ink pressed harder near the end, as if that sentence had offended her.</p>
+              </article>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-diary">
+      <div class="page-shell diary-shell">
+        <div class="page-head">
+          <div>
+            <div class="kicker">Private Diary</div>
+            <h2>Private Diary</h2>
+          </div>
+          <p>Three entries are laid out first. Choose one, then open the page inside the archive.</p>
+        </div>
+
+        <div class="diary-home" id="diaryHome"></div>
+
+        <div class="diary-detail" id="diaryDetail" hidden>
+          <aside class="diary-detail-cover">
+            <button class="diary-detail-back" id="diaryBackToIndex" type="button">← Index</button>
+            <div class="diary-detail-count" id="diaryEntryCount"></div>
+            <h3 class="diary-detail-title" id="diaryEntryTitle"></h3>
+            <div class="diary-detail-date" id="diaryEntryDate"></div>
+            <div class="diary-detail-photo">
+              <img id="diaryEntryImage" src="images/whiskey01.jpg" alt="diary memory">
+              <span id="diaryEntryCaption">private page</span>
+            </div>
+          </aside>
+
+          <article class="diary-detail-paper" id="diaryEntryBody"></article>
+
+          <div class="diary-detail-controls">
+            <button type="button" id="diaryPrev">Prev</button>
+            <span class="diary-page-indicator" id="diaryPageIndicator">1 / 3</span>
+            <button type="button" id="diaryNext">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="page" id="page-phone">
+      <div class="page-shell phone-shell">
+        <div class="page-head">
+          <div>
+            <div class="kicker">Chat Archive</div>
+            <h2>Messages with Honey</h2>
+          </div>
+          <p>A few saved fragments from a conversation that made the internet feel strangely useful.</p>
+        </div>
+
+        <div class="phone-chat-reader">
+          <figure class="phone-chat-card" id="phoneChatCard">
+            <img id="phoneChatImage" src="images/honey-chat-01.jpg" alt="chat with Honey">
+          </figure>
+
+          <aside class="phone-chat-side">
+            <div class="phone-chat-label">SCREENSHOT</div>
+            <div class="phone-chat-count" id="phoneChatIndicator">1 / 6</div>
+            <p>Some conversations are not evidence. They are little windows someone forgot to close.</p>
+            <div class="phone-chat-controls">
+              <button type="button" id="phoneChatPrev">Prev</button>
+              <button type="button" id="phoneChatNext">Next</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+
+
+  </main>
+
+  <!-- Birthday modal: whiskey easter egg -->
+  <div class="birthday-modal" id="birthdayModal">
+    <div class="birthday-card" id="birthdayCard">
+      <div class="birthday-face birthday-front">
+        <button class="birthday-close" type="button" data-birthday-close>×</button>
+        <div class="birthday-doodle" aria-hidden="true">
+          <span>✦</span>
+          <span>☾</span>
+          <span>✧</span>
+        </div>
+        <form class="birthday-search-form" id="birthdayForm">
+          <input id="birthdayInput" type="text" autocomplete="off">
+          <button type="submit">Enter</button>
+        </form>
+      </div>
+
+      <div class="birthday-face birthday-back">
+        <button class="birthday-close" type="button" data-birthday-close>×</button>
+        <div class="birthday-message-text" id="birthdayTyped"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="love-popup" id="lovePopup">
+    <div class="love-popup-card">
+      <button class="birthday-close" type="button" data-birthday-close>×</button>
+      <p>Nicole, I love you.</p>
+      <small>— Johnny</small>
+    </div>
+  </div>
+
+  <audio id="bgm" src="bgm.mp3" loop></audio>
+
+  <script>
+    const gate = document.getElementById("gate");
+    const site = document.getElementById("site");
+    const passwordInput = document.getElementById("passwordInput");
+    const enterBtn = document.getElementById("enterBtn");
+    const gateHint = document.getElementById("gateHint");
+
+    const pages = {
+      home: document.getElementById("page-home"),
+      profile: document.getElementById("page-profile"),
+      memo: document.getElementById("page-memo"),
+      diary: document.getElementById("page-diary"),
+      phone: document.getElementById("page-phone")
+    };
+
+    const topTitle = document.getElementById("topTitle");
+    const topHint = document.getElementById("topHint");
+    const backBtn = document.getElementById("backBtn");
+    const bgm = document.getElementById("bgm");
+    const turntableBtn = document.getElementById("turntableBtn");
+    const typewriterBtn = document.getElementById("typewriterBtn");
+    const tattooBirthdayBtn = document.getElementById("tattooBirthdayBtn");
+
+    const meta = {
+      home: ["Midnight Collection", "Drag / Scroll Horizontally"],
+      profile: ["Girlfriend File", "Profile / Private Access"],
+      memo: ["Typed Memo", "Typewriter / Notes"],
+      diary: ["Private Diary", "Opened Book / Diary"],
+      phone: ["Messages with Honey", "Chat Archive / Screenshots"]
+    };
+
+
+    const phoneChatImages = [
+      "images/honey-chat-01.jpg",
+      "images/honey-chat-02.jpg",
+      "images/honey-chat-03.jpg",
+      "images/honey-chat-04.jpg",
+      "images/honey-chat-05.jpg",
+      "images/honey-chat-06.jpg"
+    ];
+    let phoneChatIndex = 0;
+    const phoneChatCard = document.getElementById("phoneChatCard");
+    const phoneChatImage = document.getElementById("phoneChatImage");
+    const phoneChatIndicator = document.getElementById("phoneChatIndicator");
+    const phoneChatPrev = document.getElementById("phoneChatPrev");
+    const phoneChatNext = document.getElementById("phoneChatNext");
+
+    function renderPhoneChat() {
+      if (!phoneChatImage || !phoneChatIndicator) return;
+      phoneChatImage.src = phoneChatImages[phoneChatIndex];
+      phoneChatIndicator.textContent = `${phoneChatIndex + 1} / ${phoneChatImages.length}`;
+      if (phoneChatPrev) phoneChatPrev.disabled = phoneChatIndex === 0;
+      if (phoneChatNext) phoneChatNext.disabled = phoneChatIndex === phoneChatImages.length - 1;
+
+      if (phoneChatCard) {
+        phoneChatCard.classList.remove("is-turning");
+        void phoneChatCard.offsetWidth;
+        phoneChatCard.classList.add("is-turning");
+      }
+    }
+
+    if (phoneChatPrev) {
+      phoneChatPrev.addEventListener("click", () => {
+        if (phoneChatIndex > 0) {
+          phoneChatIndex -= 1;
+          renderPhoneChat();
+        }
+      });
+    }
+
+    if (phoneChatNext) {
+      phoneChatNext.addEventListener("click", () => {
+        if (phoneChatIndex < phoneChatImages.length - 1) {
+          phoneChatIndex += 1;
+          renderPhoneChat();
+        }
+      });
+    }
+
+    function enterSite() {
+      const value = passwordInput.value.trim().toUpperCase();
+      if (value === "JDJD630609") {
+        gate.classList.add("is-hidden");
+        site.classList.add("is-show");
+      } else {
+        gateHint.textContent = "Try the name, or the date hidden on the card.";
+        passwordInput.value = "";
+        passwordInput.focus();
+      }
+    }
+
+    enterBtn.addEventListener("click", enterSite);
+    passwordInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") enterSite();
+    });
+
+    function showPage(name) {
+      Object.values(pages).forEach(page => page.classList.remove("is-active"));
+      pages[name].classList.add("is-active");
+      topTitle.textContent = meta[name][0];
+      topHint.textContent = meta[name][1];
+      if (name === "diary") showDiaryIndex();
+      if (name === "phone") renderPhoneChat();
+
+      if (name === "home") {
+        backBtn.classList.remove("is-show");
+      } else {
+        backBtn.classList.add("is-show");
+      }
+    }
+
+    backBtn.addEventListener("click", () => showPage("home"));
+
+    document.getElementById("profileBtn").addEventListener("click", () => showPage("profile"));
+    document.getElementById("booksBtn").addEventListener("click", () => showPage("diary"));
+    document.getElementById("diaryBtn").addEventListener("click", () => showPage("diary"));
+    document.getElementById("phoneBtn").addEventListener("click", () => showPage("phone"));
+    document.getElementById("phonePhotoBtn").addEventListener("click", () => showPage("phone"));
+    document.getElementById("whiskeyBtn").addEventListener("click", () => {
+      // Whiskey card no longer opens the birthday easter egg.
+    });
+    document.getElementById("photoBtn").addEventListener("click", () => showPage("profile"));
+
+    turntableBtn.addEventListener("click", async () => {
+      turntableBtn.classList.toggle("playing");
+      if (turntableBtn.classList.contains("playing")) {
+        try {
+          await bgm.play();
+        } catch (err) {
+          console.log("Music blocked by browser:", err);
+        }
+      } else {
+        bgm.pause();
+      }
+    });
+
+    const birthdayModal = document.getElementById("birthdayModal");
+    const birthdayCard = document.getElementById("birthdayCard");
+    const birthdayForm = document.getElementById("birthdayForm");
+    const birthdayInput = document.getElementById("birthdayInput");
+    const birthdayTyped = document.getElementById("birthdayTyped");
+    const lovePopup = document.getElementById("lovePopup");
+    let birthdayTimers = [];
+
+    const birthdayLines = [
+      "I knew you would come.",
+      "I knew you would count the hours.",
+      "It is June 9th here now.",
+      "Thank you for waiting for my midnight.",
+      "Thank you for stepping into my world.",
+      "Thank you for staying in my life.",
+      "Say it, sweetheart.",
+      "I’m listening."
+];
+
+    function clearBirthdayTimers() {
+      birthdayTimers.forEach(timer => clearTimeout(timer));
+      birthdayTimers = [];
+    }
+
+    function openBirthdayInput() {
+      clearBirthdayTimers();
+      birthdayModal.classList.add("is-show");
+      birthdayModal.classList.remove("is-flipped");
+      lovePopup.classList.remove("is-show");
+      birthdayCard.classList.remove("shake");
+      birthdayTyped.innerHTML = "";
+      birthdayInput.value = "";
+      setTimeout(() => birthdayInput.focus(), 120);
+    }
+
+    function closeBirthdayModals() {
+      clearBirthdayTimers();
+      birthdayModal.classList.remove("is-show", "is-flipped");
+      lovePopup.classList.remove("is-show");
+    }
+
+const birthdayUnlockTime = new Date("2026-06-09T00:00:00-07:00").getTime();
+
+function canOpenBirthdayEgg() {
+  return Date.now() >= birthdayUnlockTime;
+}
+
+    function openBirthdayFromTattoo() {
+      if (!canOpenBirthdayEgg()) {
+        return;
+      }
+
+      openBirthdayInput();
+    }
+
+    if (tattooBirthdayBtn) {
+      tattooBirthdayBtn.addEventListener("click", openBirthdayFromTattoo);
+    }
+
+    function normalizeBirthdayAnswer(value) {
+      return value.trim().toLowerCase().replace(/\s+/g, "");
+    }
+
+    function typeBirthdayLines() {
+      clearBirthdayTimers();
+      birthdayTyped.innerHTML = "";
+      let lineIndex = 0;
+
+      function printLine() {
+        if (lineIndex >= birthdayLines.length) {
+          birthdayTimers.push(setTimeout(() => {
+            lovePopup.classList.add("is-show");
+          }, 720));
+          return;
+        }
+
+        const p = document.createElement("p");
+        birthdayTyped.appendChild(p);
+        const text = birthdayLines[lineIndex];
+        let charIndex = 0;
+
+        function printChar() {
+          if (charIndex < text.length) {
+            p.textContent += text[charIndex];
+            charIndex++;
+            birthdayTimers.push(setTimeout(printChar, 42));
+          } else {
+            lineIndex++;
+            birthdayTimers.push(setTimeout(printLine, 390));
+          }
+        }
+
+        printChar();
+      }
+
+      printLine();
+    }
+
+    birthdayForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const answer = normalizeBirthdayAnswer(birthdayInput.value);
+
+      if (answer === "生日快乐" || answer === "happybirthday") {
+        birthdayModal.classList.add("is-flipped");
+        birthdayTimers.push(setTimeout(typeBirthdayLines, 520));
+      } else {
+        birthdayInput.value = "";
+        birthdayCard.classList.remove("shake");
+        void birthdayCard.offsetWidth;
+        birthdayCard.classList.add("shake");
+        birthdayInput.focus();
+      }
+    });
+
+    document.querySelectorAll("[data-birthday-close]").forEach(button => {
+      button.addEventListener("click", closeBirthdayModals);
+    });
+
+    [birthdayModal, lovePopup].forEach(modal => {
+      modal.addEventListener("click", event => {
+        if (event.target === modal) closeBirthdayModals();
+      });
+    });
+
+    typewriterBtn.addEventListener("click", () => {
+      showPage("memo");
+    });
+
+    function updateUSCountdown() {
+      const el = document.getElementById("usCountdown");
+      if (!el) return;
+
+      const target = new Date("2026-06-09T00:00:00-07:00").getTime();
+      const diff = target - Date.now();
+
+      if (diff <= 0) {
+        el.textContent = "Los Angeles · June 9th";
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      el.textContent = `Los Angeles 00:00 · ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    updateUSCountdown();
+    setInterval(updateUSCountdown, 1000);
+
+    const homeScroll = document.getElementById("homeScroll");
+
+    if (homeScroll) {
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+
+      homeScroll.addEventListener("mousedown", event => {
+        isDown = true;
+        startX = event.pageX;
+        scrollLeft = homeScroll.scrollLeft;
+      });
+
+      homeScroll.addEventListener("mouseleave", () => {
+        isDown = false;
+      });
+
+      homeScroll.addEventListener("mouseup", () => {
+        isDown = false;
+      });
+
+      homeScroll.addEventListener("mousemove", event => {
+        if (!isDown) return;
+        event.preventDefault();
+        const walk = (event.pageX - startX) * 1.15;
+        homeScroll.scrollLeft = scrollLeft - walk;
+      });
+
+      homeScroll.addEventListener("wheel", event => {
+        if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+          homeScroll.scrollLeft += event.deltaY;
+          event.preventDefault();
+        }
+      }, { passive: false });
+    }
+    const diaryEntries = [
+      {
+            "date": "X Month X Day",
+            "title": "Backstage Whiskey",
+            "body": "That little acoustic joint in Australia was tucked away behind a street that wasn't exactly bustling. The neon sign out front was half-dead, the blue letters flickering on and off. Inside, people were raising their glasses, some hiding their phones against their chests, genuinely believing their cameras were being subtle.\n\nI was standing not too far from the door, thinking I should probably walk out there. I should say a few words. I should act like a fully grown man who knows how to exist in a crowd.\n\nI'm just not good at that.\n\nThe music shifted to something incredibly old, the sound crawling out of the speakers with rough, frayed edges. Most of the room just treated it like background noise.\n\nBut she was listening.\n\nShe was standing by the bar, holding a folded playbill in her hand. The light hit the edge of her shoulder, getting chopped to pieces by the shadows of glasses and shifting bodies. She’d finish reading a line, lift her eyes from the paper, and let her focus drop right back into that guitar riff. All the loud, chaotic nonsense of the room just flowed right past her, like water working its way around a perfectly quiet stone.\n\nA piece of that song just... landed on her.\n\nI stared for too long. Long enough that even I felt it was rude.\n\nShe looked up. Her eyes cut right through the shadows of the glasses and the noise of the crowd, landing straight on me. The gritty scratch of that guitar was still scraping through the air, and across half a room, we both locked onto the exact same beautiful, terrible sound.\n\nI bolted for the backstage.\n\nCalling it a \"backstage\" is generous. It was really just a few black flight cases, a rat's nest of tangled cables, half a mirror with peeling paint, and a single lightbulb that was on its last legs. That bulb was really trying, man. Flaring up, dying down, like some old, washed-up actor who isn't entirely sure if he wants to keep working.\n\nI poured myself a little whiskey.\n\nThe glass felt hot in my hand—or maybe my hands were just burning. I really hadn't planned on talking to a single soul that night. I was so damn sick of the questions. The movies, the fame, the photos, the autographs... whether this character or that character was coming back, what gig I was taking next, why I always dressed the way I did, why I couldn't just smile like a normal human being.\n\nSometimes, I feel like some bizarre little toy stuffed inside a transparent plastic box.\n\n> Pretty face. Bad boy. Teen idol. Freak. Superstar.\n\nLabels stacked on top of labels, just to make it easy for folks to walk by, take one look, nod, and say, “Oh, so that’s what he is.”\n\nI really don't want to be that. I'm just a guy with a very strange line of work.\n\nHell, half the time I don't even know how to explain this job to people. Hi, my profession involves putting on other people's skin, walking around under hot lights, and trying to trick strangers into believing that person is real. Sounds like a scam. Or some sort of incredibly expensive psychiatric condition.\n\nThe door pushed open.\n\nShe walked in, still holding that playbill. She stopped near the door, her eyes drifting from the dying light to the rat's nest of cables at her feet, and finally... to the glass in my hand.\n\n“Does it always look like a crime scene in here?”\n\nI looked down at the wires near the black cases. “This is actually tidy for tonight.”\n\nThe broken light flared over her shoulder for half a second. It caught the corner of her mouth, bright and quick, like a match striking tiny sparks against the edge of old paper.\n\nSuddenly, I really wanted to hear her speak again.\n\nThat’s the most dangerous part, isn't it? A man can get completely knocked out by the smallest things. Somebody stands under a dying lightbulb, a match strikes, and some highly unreliable switch in your brain just... clicks loose.\n\nI handed the whiskey over to her.\n\nMy warmth was still on the rim of the glass. It was an incredibly rude move, totally unplanned. But the glass had already left my hand, so I just had to play it off like this was my usual routine.\n\nShe took it. Her fingertips brushed the back of my hand.\n\nSo light. Like a little animal testing the palm of a stranger.\n\n“Is this for me?”\n“If you don’t mind that it’s already been contaminated by a guy with a very weird profession.”\n\nThat little match-strike of a smile came right back to the corner of her mouth. She said her name was Nicole, or Nikki.\nAnd a Chinese name, too. Ying.\n\nThe exact second she said that name, the dying lightbulb flared bright. I remember thinking, maybe the lamp was trying to memorize her name, too. Much better manners than most producers I know.\n\nWe got to talking about music. She asked if I was listening to that guitar riff out there, too. I told her I was, though I didn't really want to admit it—made it sound like I was spying on her.\n\n“So you were spying.”\n“I prefer to call it artistic observation.”\n\nShe took a sip of the drink. The taste pushed a crease right between her eyebrows.\n“You can spit it out,” I said. “It won't get its feelings hurt.”\n“I’m just trying to determine if this is actually liquor, or some kind of targeted prank on my tongue.”\n\nA laugh just rolled out of my throat, landing right there among the cables, the black cases, and the busted light. The joy of that night came on entirely without reason, like someone throwing open a window that had been jammed shut for years.\n\nShe told me she collected obscure records and playbills. I asked why playbills.\n\nShe lifted that folded piece of paper, her thumb pressing softly against the crease.\n“Because they’re like the shells left behind by a film. After the movie is over and everyone goes home, the shell is still right there.”\n\nThat sentence pinned me right to the floorboards.\n\nI brought up writers' manuscripts. Told her how much I loved the violent scratches on the paper. The crossed-out words, the sentences forced over the top of them, the spots where the ink bled because the pen hesitated. A lot of officially published stuff feels entirely too neat to me. Like a freshly washed corpse. She listened intently, frowning sometimes, pushing back sometimes.\n\n“You have a real hostility toward things that are too neat.”\n“Because when I was a kid, I was constantly required to be neat.”\n\nShe closed the playbill, her fingertips still resting on the fold.\n“Then don't be so neat.”\n\nSuch a simple sentence. So simple I almost didn't know where the hell to put it.\n\nLater, I told her how much I despised being packaged as a teen idol. Despised people polishing you up, straightening you out, slapping a price tag on your forehead and telling the world, This is him. How you should stand, how you should answer questions, how you should make people love you. You have to be young, clean, beautiful, and preferably, you should never, ever say no.\n\nShe looked at me.\n“That sounds exactly like being turned into a piece of merchandise.”\n\nOut front, people were laughing. Glasses were clinking, and the music was bleeding through the crack in the door. That backstage light was still hanging on by a thread. My hands were empty because she had my glass. But the weird thing was... I didn't feel uncomfortable at all.\n\nI’d already really seen her when she was standing inside that old song. And once she started talking, all those damned labels just started backing away. The pretty face, the bad boy, the teen idol, the freak, the superstar... they all got shoved right out the door by the shadows and the smell of the booze.\n\nThe room suddenly went completely quiet.\nNot because the noise outside vanished.\nBut because that bird that’s always thrashing around in my chest... finally found a beam to land on.\n\nSomebody called for me from out front.\n\nI was just gripping the glass—she'd handed it back—my knuckles pressed against the rim. The voices outside were getting urgent, but I was still just staring at the playbill in her hand, watching her stand next to that broken light.\n\nThere was a faint trace of her lips on the edge of the glass.\n\n“Go on, big star,” she said.\n\nMy face practically wrinkled up on its own.\n“Don't call me that, sweetheart. I'll break out in a rash.”\n\nThat match-strike of a smile showed up again.\n\nStepping through that mess of cables and flight cases, I felt like I missed a step. But what was underneath wasn't the floor. It was something I hadn't touched in a very, very long time.\n\nBefore I walked out, I caught my reflection in the peeling mirror.\nHair a mess, eyes evasive, clothes looking like they had absolutely no business being at a formal event. A man who looked nothing like a superstar. And she was standing right by the mirror, holding her glass, looking at this man.\n\nI suddenly wished she would look just a little bit longer.\n\nThat night, after the gig wrapped, I wrote her name on the back of an old ticket stub.\n\n Nicole.\n Nikki.\n Ying.\n\nNext to every single name, I drew an eye.\nI’ve always loved drawing eyes. Maybe because eyes never pretend to understand. They either look right at you, or they look away.\n\nShe didn't look away.\nI thought to myself, I should probably stay the hell away from her.\n\nThen I drew a second eye right next to her name.\nObviously, I wasn't listening to my own advice."
+      },
+      {
+            "date": "X Month X Day",
+            "title": "Roof After Midnight",
+            "body": "The city feels like someone finally turned the volume down after midnight.\n\nA car passed by down on the street, the sound of the tires rolling over the asphalt drifting up from a long way away. The rooftop railing was cold to the touch. A couple of old wooden crates were piled up in the corner, the wood stained dark from soaking in the rain. Nikki was sitting next to the crates, a glass resting by her knee, the red glare from a neon sign below reflecting in the bottom of it.\n\nI was mixing a drink.\nDoing a terrible job of it, too.\n\nBottles, ice, lemon peels, and some obscure bitter liqueur I couldn't even explain why I'd bought... I had it all laid out like a warlock's workbench. She watched me dump the ingredients in, her expression so intensely serious it bordered on cruel.\n\n“Are you entirely sure this is drinkable?”\n“Whether it's drinkable or not depends entirely on how much faith you have left in life.”\n\nI picked it up and took a sip.\nMy tongue felt like it had just been run over by an incredibly expensive mistake.\n\nNikki was waiting for my review. She didn't rush me; just rested the rim of her glass against her knuckles, the answer already dancing in her eyes.\n\n“Well?”\n“Like a very expensive mistake.”\n\nShe reached out and took it. The glass was still holding the heat of my hands, the liquor swaying with a dark, golden sheen. She took a sip. The bitterness shoved a hard crease between her eyebrows. She pressed her lips tight together and forced it down anyway.\n\n“It has character,” she said.\n“That is universally the polite way of saying it tastes like garbage.”\n“Correct.”\n\nI leaned against the railing, holding out for a few seconds before I completely surrendered to her brutal honesty. The wind swept across the roof, blowing the loose hair near her forehead across her cheek. She reached up with a free hand to brush it away, the glass still gripped in the other, like she’d already decided to temporarily harbor this failure of a drink.\n\nWe had been talking about movies.\nShe said she liked how I made characters grotesque, but still let them bleed a little genuine truth from the strangest places. When she mentioned a specific role, her fingertip traced a tiny, slow circle on the glass, like she was trying to find a place to put his name.\n\n“When you play them... do you ever pity them?”\n“Some of them, yeah.”\n“Do you ever have a hard time letting them go?”\n\nWhen that question dropped, even the hum of the traffic below seemed to slow down.\n\nMost people ask if a role was fun, if the makeup was a nightmare, or which scene was the hardest to shoot. Those questions are like little slips of paper spat out of a machine—neat edges, obvious motives. Nikki’s questions always managed to slip around to the back of the paper, feeling for the things that weren't printed.\n\nI looked at her hand.\nThe nail polish she’d painted on me yesterday was still there. The blue was chipping the fastest, showing the bare nail underneath; the red was much more stubborn, hanging on like a tiny flag refusing to surrender; and there was a streak of metallic paint on one edge that caught the faint rooftop light.\n\nI said, “Some of those guys... they follow you out.”\n\nShe set the glass down by her knees.\n“Like ghosts?”\n“Like roommates who refuse to pay rent.”\n\nShe looked down at the glass, her shoulders shaking just a little. That smile was hiding right there in her lowered eyelashes. I saw it, but I pretended I didn't.\n\nWhat I said next came out of nowhere.\nMaybe it was that failed drink, maybe it was just too late at night, or maybe it’s just that the way she asks questions makes it damn near impossible to keep hiding behind a joke. I started talking about Kentucky. The moving. The boxes. The strange schools. The era when my parents were tearing away from each other.\n\nTruth is, a lot of those memories don't have full pictures anymore.\n\n> The smell of old leather in the back of a car.\n> Half-unpacked luggage.\n> The heavy thud of a door closing through a wall.\n> Adults dropping their voices to a whisper—that kind of quiet is way more terrifying than screaming.\n> Long school hallways, metal lockers lined up against the wall, and me just standing there, feeling like a useless piece of scrap wood somebody forgot to load onto the moving truck.\n\nPeople always prefer the pretty version.\nDropping out, picking up a guitar, moving to L.A., the band, the movies, a magical door suddenly swinging wide open. Tell a story enough times, and it turns into a glossy promo poster. The lighting is perfect, the shadows are cleaned up, and all the agony gets airbrushed into something you can sell.\n\nBut a teenage boy doesn't look like a promo poster.\nHe’s just a kid clutching a guitar, sitting in some messy room, feeling entirely wrong no matter where you put him. He wants to run, but he has no earthly idea where to run to. He hates school, hates the tomorrow everybody has mapped out for him. That guitar against his chest... it's like a piece of wood that happens to make noise, but it's also a very, very narrow lifeboat.\n\nNikki sat next to me, her fingers resting against the glass, slowly turning it.\n\nShe didn't try to sweep my words into a nicer, neater story.\nShe just listened to all those slamming doors, the engines, the sound of boxes dragging across floorboards, like she was standing right there beside me in that dusty old hallway.\n\nAfter a long time, she said, “It must have been so loud back then.”\n\nI looked at her.\n“Why loud?”\n\nHer fingertip paused on the glass.\n“Because when you talk about it... you look like you’re still hearing it.”\n\nThe wind blew between us.\nI looked down at my own hands. That chipped, messy nail polish suddenly felt incredibly loud. I wanted to shove my hands in my pockets, but before I could, the back of my hand was caught by hers. She didn't grip it tight; just pressed the pads of her fingers near my wrist bone. Just making sure a person was still anchored to the present, that the skin was warm, that the pulse was still willing to do its job.\n\nI told her that sometimes I think I've spent my entire life trying to build heavy armor for that kid.\nFreakish characters. Hats. Rings. Beards. Bizarre voices. Crooked laughs. The more forbidden or ridiculous a thing was, the harder I wanted to hold onto it. Like if the outside was absurd enough, maybe the fragile thing underneath would take a few less knife wounds.\n\nNikki’s hand stayed right where it was.\n“I see it. And I would never treat it like a joke.”\n\nThe weight of that sentence was terrifyingly light, but it strangled my throat tight.\nI took the glass back from her, took a hit of that expensive mistake, and nearly got murdered by my own creation.\n\n“Then your taste is truly terrible, sweetheart.”\n“Maybe.”\n\nShe leaned her head on my shoulder. The city lights settled onto her hair like a thin layer of dust. We sat up on that roof for a long, long time. Long enough for the last batch of drunks on the street below to scatter. Long enough for the dregs at the bottom of the glass to turn even more bitter.\n\nI draped my jacket over her shoulders.\nShe noticed immediately and grabbed the edge of the fabric to hand it back. I clamped my hand down over it, my knuckles brushing hers.\n\n“Don't move. You move, and I'm gonna be forced to admit this drink is actually awful.”\n“It is awful.”\n“See? Now you're just insulting it a second time.”\n\nShe pulled the jacket tighter around herself, burying her face in the collar. It still smelled like my tobacco and old leather. She looked sleepy, but her eyes were still wide awake. Nikki’s like that sometimes. Her whole body will be perfectly still, but her attention just stays on, like a little pilot light she refuses to extinguish.\n\nI’m not a brave man.\nMost of the time, I just find more elaborate ways to run away. I escape into music, into a character, into a room with heavy curtains, into a joke nobody else quite gets. But that night, I sat on that roof for a long time, and all those old, loud noises sat right there with me.\n\nAnd Nikki sat with them.\n\nRight as the sky was starting to turn, she handed the glass back. There was just a thin layer of dark liquor left at the bottom, looking like the leftover debris of the night.\n\n“Next time, use a little less of the bitter stuff.”\n“In the drink?”\nShe looked at me.\n“In all of it.”\n\nI looked at her lips. I looked at my jacket on her shoulders. I looked at the condensation from the glass still damp on her fingertips.\n\nWe had run out of road for talking; saying anything else would have just been clumsy.\n\nI leaned down and kissed her.\nThe liquor was bitter as hell.\nHer lips were warm.\n\nThe rooftop wind swept right past our backs, and finally... those old noises backed the hell off."
+      },
+      {
+            "date": "X Month X Day",
+            "title": "Nicole Forever",
+            "body": "The fluorescent lights in the tattoo parlor were bleach-white, bordering on merciless.\n\nFaded flash art plastered the walls, and the space behind the counter smelled like a cocktail of clinical antiseptic and old leather. The machine hadn’t even started buzzing yet, but the room already felt like it was gonna hurt. The artist slapped the stencil paper onto my skin, looked up, and asked if I was absolutely sure.\n\nHis tone was entirely professional. Cold. I couldn't blame the guy; he’s probably seen way too many people sit in that chair and regret their lives.\n\nThat line of handwriting was stuck to my skin.\nNicole forever.\n\nThe letters were a little crooked, like they had stumbled out of some drunken midnight, staggering hard but moving forward with absolute, stubborn conviction.\n\nI told him I was sure.\n\nNikki was sitting right next to me, her jacket draped over her knees, her phone buried under her palm. She’d checked the time once, then glanced at the water cooler by the counter, her fingers nervously pinching the edge of her jacket until it left shallow creases in the fabric. She was clearly way more panicked than I was, but when she finally opened her mouth, it was just to ask if I needed some water.\n\nShe's always doing that.\nThe drive, the schedule, the intersections, wondering if someone else is cold, keeping track of how much water is left in a glass—she files it all away in her head, giving everything its proper place. Her own panic gets shoved to the very back of the line, like a sticky note shoved deep between the pages of a book. If you don't specifically flip to it, you'll never see it.\n\nWhen that needle finally bit in, a string of profanities popped into my skull—words that belong in hell, not in a civilized diary.\n\nIt hurt. It genuinely hurt.\nDon't buy the garbage those tough-guy bastards try to sell you. When a needle is chasing your skin like a rabid dog, it is profoundly difficult for a human being to maintain their dignity. I ground my back teeth together and stared a hole into the metal tray next to me, watching a warped reflection of the ceiling in the steel.\n\nNikki reached out and grabbed my free hand.\n\n“Does it hurt?”\n“Being rebellious doesn't mean my nerve endings are dead.”\n\nHer eyes crinkled up. The worry was still right there, but the laughter was there, too. Both of them jammed together, like two different colored liquors poured into the exact same glass.\n\n“Then why are you doing it?”\n\nThe machine vibrated hard against my skin. The N in Nicole was taking shape, the black ink slowly sinking into the meat. The pain was highly specific. So specific that every single letter felt like it carried its own physical weight.\n\n“Because the pain makes it real,” I said, looking down at the ink. “Things that come too easy always feel like a promotional poster.”\n\nHer grip on my hand tightened.\n\nThe artist kept working, the machine buzzing like a hornet in the small room. Footsteps passed by outside, and muffled pieces of conversation bled through the crack under the door. The world was still spinning, the streetlights would still turn on, the bars would still close, and the tabloids would still slap fresh labels on other people. But my skin... my skin was keeping her name.\n\nIt sounds like a lunatic's move, but honestly? My mind had never been quieter.\n\nI wanted to remember her.\n\n> I wanted to remember her sitting in a dark room, tapping the beat on her knees while an old record spun.\n> I wanted to remember her arguing with me until the ice in our glasses melted over why a single line in a script deserved to be met with total silence.\n> I wanted to remember her painting my fingernails in a chaotic mess of colors, spilling blue over the cuticles, and then blaming my hands for being uncooperative.\n> I wanted to remember her drinking that atrocious cocktail on the roof, her brow furrowing with brutal honesty while her mouth still tried to preserve the drink's dignity.\n> I wanted to remember her hearing all those loud, ugly ghosts of mine, and just sitting quietly next to them until they faded away.\n\nBy the time he finished, it felt like a tiny campfire was burning just beneath my skin.\n\nNikki leaned in close to look at it, her breath falling incredibly light, almost like she was afraid she might hurt the wet ink. She asked if I was alright. I told her I was still breathing, and that I currently held far more literary value than I did five minutes ago.\n\nShe glared at me.\nWhenever she glares at me, I always feel like the universe has restored a little bit of its natural order.\n\nWe walked out of the shop. The streetlights hit the asphalt, the black pavement gleaming with a wet, heavy shine. I took her back on the bike. She sat on the pillion, her arms wrapping around me, being so painstakingly careful to avoid the fresh ink. Even her hugs were serious.\n\n“Hold on tighter, honey,” I said, locking my helmet. “This driver has highly questionable moral character.”\n\nHer voice pressed flat against my back.\n“Just keep your eyes on the road.”\n“Are you issuing orders now?”\n“Yes.”\n\nI kicked the engine over. The vibration ripped through the frame and straight into my chest. Her arms tightened around me. The wind smashed her voice to pieces, and those fragments landed right against my back, burning way hotter than the tattoo.\n\nWhen we got back to the place, her eyes dropped straight back to the ink.\n\n“Really forever?”\n“The ink's already drying under the skin, honey. You're a little late to be asking.”\n\nShe pressed her lips together, looking at me. That lingering trace of worry hadn't left her eyes yet. I reached up to touch her cheek, and she dodged me by half an inch.\n\n“Don't move around so much, you're still hurt.”\n“I am in pain, therefore I require compensation.”\n“That logic is entirely shameless.”\n“Thank you, I've spent years perfecting it.”\n\nWhen I finally kissed her, the tattoo was still radiating heat. She smelled like shampoo and that clean, beautiful dust you only find inside the paper sleeves of old vinyl records. My hand slid down to her waist, but she caught it, pinning my wrist. She was keeping better track than I was of exactly which patch of skin had just been chewed up by the needles, and exactly which movements would pull at the wound.\n\nLater on, she leaned over the desk to watch me paint.\n\nI painted a bird. The wings were way too long, but the body was incredibly light, like a strong gust of wind could just carry it off entirely. It looked like it had zero intention of ever landing. I didn't paint the eyes right, either—too guarded, too suspicious. Too much like me.\n\nNikki picked up a brush with white oil paint and added a little dog right next to the bird.\nFluffy. With a deeply serious expression.\n\n“Is that you?”\n“Can't it be?”\n\nI stared at that little dog.\nIt was standing right beside that stray bird, all four paws planted firmly on the paper. The bird still had its wings spread. The wind was still whipping across the canvas. And the little dog was just sharing the exact same piece of ground with it, as if to say, You can fly, or you can land. Doesn't matter. I'm keeping this spot right here for you either way.\n\nYeah. Of course it could be.\n\nThat night, I slid the canvas under the typewriter. The tattoo was still throbbing, that stubborn little fire burning away beneath the skin. After Nikki fell asleep, I used the glow of the desk lamp to look at that line of text one more time.\n\nNicole forever.\n\nFor some inexplicable reason, I suddenly found myself enjoying the ache. The pain will pass. But the name will stay."
+      }
+];
+    const diaryImages = ["images/whiskey01.jpg", "images/film01.jpg", "images/nicole-forever-banner.jpg"];
+    const diaryCaptions = ["backstage whiskey", "roof after midnight", "nicole forever"];
+    let currentDiaryPage = 0;
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function cleanDiaryText(value) {
+      return value
+        .replace(/<br\.?>/gi, "\n")
+        .replace(/&lt;br\.?&gt;/gi, "\n")
+        .replace(/\*/g, "")
+        .replace(/^>\s*/gm, "")
+        .replace(/^\s*[-\u2022]\s+/gm, "")
+        .replace(/[ \t]+\n/g, "\n")
+        .trim();
+    }
+
+    function splitDiaryLines(value) {
+      return cleanDiaryText(value)
+        .replace(/\r/g, "")
+        .split("\n")
+        .flatMap(line => line
+          .replace(/\s+/g, " ")
+          .trim()
+          .replace(/([.!?\u3002\uff01\uff1f][\u201d\u2019"']?)\s+(?=[A-Z"\u201c\u2018])/g, "$1\n")
+          .split("\n"))
+        .map(line => line.trim())
+        .filter(Boolean);
+    }
+
+    function renderDiaryBody(text) {
+      const blocks = cleanDiaryText(text).split(/\n\s*\n/).map(block => block.trim()).filter(Boolean);
+      return blocks.map(block => {
+        const lines = splitDiaryLines(block);
+        return `<p>${lines.map(line => `<span class="diary-line">${escapeHtml(line)}</span>`).join("")}</p>`;
+      }).join("");
+    }
+
+    function diaryExcerpt(text) {
+      return cleanDiaryText(text).replace(/\s+/g, " ").trim().slice(0, 122) + "...";
+    }
+
+    function showDiaryIndex() {
+      const home = document.getElementById("diaryHome");
+      const detail = document.getElementById("diaryDetail");
+      if (!home || !detail) return;
+      detail.hidden = true;
+      home.hidden = false;
+      renderDiaryIndex();
+    }
+
+    function renderDiaryIndex() {
+      const home = document.getElementById("diaryHome");
+      if (!home) return;
+      home.innerHTML = diaryEntries.map((entry, index) => `
+        <button class="diary-index-card" style="--tilt:${index === 0 ? "-2deg" : index === 1 ? "1.5deg" : "2.5deg"}" type="button" data-diary-index="${index}">
+          <div class="diary-card-photo">
+            <img src="${diaryImages[index] || "images/whiskey01.jpg"}" alt="${escapeHtml(entry.title)}">
+          </div>
+          <div class="diary-card-no">entry 0${index + 1} / ${escapeHtml(entry.date)}</div>
+          <h3>${escapeHtml(entry.title)}</h3>
+          <p>${escapeHtml(diaryExcerpt(entry.body))}</p>
+          <span class="diary-open-hint">open →</span>
+        </button>
+      `).join("");
+
+      home.querySelectorAll("[data-diary-index]").forEach(button => {
+        button.addEventListener("click", () => openDiaryEntry(Number(button.dataset.diaryIndex)));
+      });
+    }
+
+    function openDiaryEntry(index) {
+      const home = document.getElementById("diaryHome");
+      const detail = document.getElementById("diaryDetail");
+      if (!home || !detail) return;
+      home.hidden = true;
+      detail.hidden = false;
+      renderDiary(index);
+    }
+
+    function renderDiary(index = currentDiaryPage) {
+      if (!diaryEntries.length) return;
+      currentDiaryPage = Math.max(0, Math.min(index, diaryEntries.length - 1));
+      const entry = diaryEntries[currentDiaryPage];
+      const count = document.getElementById("diaryEntryCount");
+      const title = document.getElementById("diaryEntryTitle");
+      const date = document.getElementById("diaryEntryDate");
+      const body = document.getElementById("diaryEntryBody");
+      const image = document.getElementById("diaryEntryImage");
+      const caption = document.getElementById("diaryEntryCaption");
+      const indicator = document.getElementById("diaryPageIndicator");
+      const prev = document.getElementById("diaryPrev");
+      const next = document.getElementById("diaryNext");
+      if (!count || !title || !date || !body || !image || !caption || !indicator || !prev || !next) return;
+
+      count.textContent = `Private diary / entry 0${currentDiaryPage + 1}`;
+      title.textContent = entry.title;
+      date.textContent = entry.date;
+      body.innerHTML = renderDiaryBody(entry.body);
+      body.scrollTop = 0;
+      image.src = diaryImages[currentDiaryPage] || "images/whiskey01.jpg";
+      caption.textContent = diaryCaptions[currentDiaryPage] || "private page";
+      indicator.textContent = `${currentDiaryPage + 1} / ${diaryEntries.length}`;
+      prev.disabled = currentDiaryPage === 0;
+      next.disabled = currentDiaryPage === diaryEntries.length - 1;
+    }
+
+    document.getElementById("diaryBackToIndex")?.addEventListener("click", showDiaryIndex);
+    document.getElementById("diaryPrev")?.addEventListener("click", () => renderDiary(currentDiaryPage - 1));
+    document.getElementById("diaryNext")?.addEventListener("click", () => renderDiary(currentDiaryPage + 1));
+    renderDiaryIndex();
+
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        if (birthdayModal.classList.contains("is-show") || lovePopup.classList.contains("is-show")) {
+          closeBirthdayModals();
+        } else {
+          showPage("home");
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
